@@ -46,7 +46,7 @@ func RunNode() host.Host {
 		libp2p.Identity(defaultConfigPriv),
 		libp2p.Ping(true),
 	)
-	log.Printf("Default config hosts ID is %s\n", node.ID())
+	log.Printf("(WORKING) config hosts ID is %s\n", node.ID())
 
 	manualConfigPriv, _, err := crypto.GenerateKeyPair(
 		crypto.Ed25519, // Select your key type. Ed25519 are nice short
@@ -97,7 +97,7 @@ func RunNode() host.Host {
 		panic(err)
 	}
 	defer node.Close()
-	log.Printf("Manual config hosts ID is %s\n", node.ID())
+	log.Printf("(WIP) Manual config host ID is %s\n", node.ID())
 
 	return node
 }
