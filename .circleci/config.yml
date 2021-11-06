@@ -45,7 +45,7 @@ jobs:
     docker:
       - image: circleci/golang:1.17.2
     environment:
-      LOCAL_DOCKER_IMAGE: sharefile-api
+      LOCAL_DOCKER_IMAGE: blitzshare.bootstrap.node
     steps:
       - checkout
       - kubernetes/install-kubectl
