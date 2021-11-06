@@ -25,7 +25,7 @@ build-docker-run:
 	docker run -t blitzshare.bootstrap.node
 
 k8s-destory:
-	kubectl delete namespace file-share-ns
+	kubectl delete namespace bootstrap-ns
 
 k8s-pf:
 	kubectl port-forward $(kubectl get pods  | tail -n1 | awk '{print $1}') 8000:80
