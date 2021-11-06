@@ -13,16 +13,12 @@ start:
 	go run ./cmd/main.go
 
 build:
-	GIN_MODE=release go build -o entrypoint app/main.go
+	go build -o entrypoint app/main.go
 
 dockerhub-build:
 	docker build -t blitzshare.bootstrap.node:latest .
 	docker tag blitzshare.bootstrap.node:latest iamkimchi/blitzshare.bootstrap.node:latest
 	docker push iamkimchi/blitzshare.bootstrap.node:latest
-
-build-docker-run:
-	make build-docker
-	docker run -t blitzshare.bootstrap.node
 
 k8s-destory:
 	kubectl delete namespace bootstrap-ns
@@ -34,5 +30,5 @@ k8s-apply:
 	kubectl apply -f k8s/config/namespace.yaml 
 	kubectl apply -f k8s/config/deployment.yaml
 	kubectl apply -f k8s/config/service.yaml
-	kubectl set image deployment/bootstrap-deployment bootstrap-containers=iamkimchi/blitzshare.bootstrap.node:local-latest -n bootstrap-ns
+	kubectl set image deployment/bootstrap-deployment bootstrap-containers=iamkimchi/blitzshare.bootstrap.node:latest -n bootstrap-ns
 	kubectl wait -f k8s/config/deployment.yaml --for condition=available

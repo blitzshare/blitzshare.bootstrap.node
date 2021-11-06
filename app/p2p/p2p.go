@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/blitzshare/blitzshare.bootstrap.node/app/dependencies"
+	"github.com/blitzshare/blitzshare.bootstrap.node/app/services"
 	"github.com/libp2p/go-libp2p"
 	connmgr "github.com/libp2p/go-libp2p-connmgr"
 	"github.com/libp2p/go-libp2p-core/crypto"
@@ -39,8 +40,8 @@ func RunNode(deps *dependencies.Dependencies) host.Host {
 		-1,             // Select key length when possible (i.e. RSA).
 	)
 	addr := fmt.Sprintf("/ip4/%s/tcp/%s", deps.Config.Server.Host, deps.Config.Server.Port)
-	var deafaultNode host.Host
-	deafaultNode, err = libp2p.New(ctx,
+	var defaultNode host.Host
+	defaultNode, err = libp2p.New(ctx,
 		libp2p.ListenAddrStrings(addr),
 		libp2p.Identity(defaultConfigPriv),
 		libp2p.Ping(true),
@@ -50,9 +51,18 @@ func RunNode(deps *dependencies.Dependencies) host.Host {
 	}
 	log.Printf("(WORKING) host")
 	// go PrintState(deafaultNode)
-	log.Printf(" - NODE ID: %s", deafaultNode.ID())
-	log.Printf(" - NODE ADDR: %v", deafaultNode.Addrs())
-	return deafaultNode
+	log.Printf(" - NODE ID: %s", defaultNode.ID())
+	log.Printf(" - NODE ADDR: %v", defaultNode.Addrs())
+	event := services.NewNodeJoinedEvent(string(defaultNode.ID()))
+	msgId, err := services.EmitNodeJoinedEvent(deps.Config.Settings.QueueUrl, event)
+
+	if err != nil {
+		log.Errorln(err)
+		log.Printf("FAILED to emit node joined msg")
+	} else {
+		log.Printf("node joined msgId: %s", msgId)
+	}
+	return defaultNode
 }
 
 func runCusomNodeConfig() {

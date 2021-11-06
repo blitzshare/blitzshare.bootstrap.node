@@ -10,17 +10,16 @@ import (
 
 type NodeJoinedEvent struct {
 	NodeId string `json:"nodeId"`
-	Addr   string `json:"addr"`
 }
 
-func NewNodeJoinedEvent(nodeId string, addr string) *NodeJoinedEvent {
-	return &NodeJoinedEvent{NodeId: nodeId, Addr: addr}
+func NewNodeJoinedEvent(nodeId string) *NodeJoinedEvent {
+	return &NodeJoinedEvent{NodeId: nodeId}
 }
 
 const clientId = "bootstrap-node"
 const channelName = "node-instances-channel"
 
-func submitEvent(queueUrl string, event []byte, channelName string) string {
+func submitEvent(queueUrl string, event []byte, channelName string) (string, error) {
 	ctx, _ := context.WithCancel(context.Background())
 	client, err := kubemq.NewClient(ctx,
 		kubemq.WithAddress(queueUrl, 50000),
@@ -28,7 +27,8 @@ func submitEvent(queueUrl string, event []byte, channelName string) string {
 		kubemq.WithTransportType(kubemq.TransportTypeGRPC))
 
 	if err != nil {
-		log.Fatal("something is wrong", err)
+		log.Error("something is wrong", err)
+		return "", err
 	}
 	defer client.Close()
 
@@ -38,21 +38,24 @@ func submitEvent(queueUrl string, event []byte, channelName string) string {
 		Send(ctx)
 
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 	log.Debugln("clientId", clientId)
 	log.Debugln("uploadMsgEventChannelName", channelName)
-	return sendResult.MessageID
+	return sendResult.MessageID, nil
 }
 
-func EmitNodeJoinedEvent(queueUrl string, event *NodeJoinedEvent) string {
+func EmitNodeJoinedEvent(queueUrl string, event *NodeJoinedEvent) (string, error) {
 	log.Debug("SubmitNodeJoinedEvent: %v", event)
 	bEvent, err := json.Marshal(event)
 	if err != nil {
 		log.Fatal(err)
-		return ""
+		return "", err
 	}
-	msgId := submitEvent(queueUrl, bEvent, channelName)
+	msgId, err := submitEvent(queueUrl, bEvent, channelName)
+	if err != nil {
+		return "", err
+	}
 	log.Debug("msgId: %s", msgId)
-	return msgId
+	return msgId, nil
 }
