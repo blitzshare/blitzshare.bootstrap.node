@@ -1,8 +1,12 @@
-package main
+package p2p
 
 import (
 	"context"
 	"fmt"
+	"time"
+
+	"github.com/blitzshare/blitzshare.bootstrap.node/app/dependencies"
+	"github.com/blitzshare/blitzshare.bootstrap.node/app/services"
 	"github.com/libp2p/go-libp2p"
 	connmgr "github.com/libp2p/go-libp2p-connmgr"
 	"github.com/libp2p/go-libp2p-core/crypto"
@@ -11,54 +15,69 @@ import (
 	dht "github.com/libp2p/go-libp2p-kad-dht"
 	noise "github.com/libp2p/go-libp2p-noise"
 	libp2ptls "github.com/libp2p/go-libp2p-tls"
-	"log"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
+	log "github.com/sirupsen/logrus"
 )
 
-func main() {
-	node := RunNode()
-	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
-	<-ch
-	fmt.Println("Received signal, shutting down...")
+func PrintNodeInfo(node host.Host) {
+	log.Printf(" - NODE ID: %s", node.ID())
+	log.Printf(" - NODE ADDR: %v", node.Addrs())
+	peers := node.Network().Peers()
+	log.Infoln("Connected Peers", peers)
+}
 
-	// shut the node down
-	if err := node.Close(); err != nil {
-		panic(err)
+func PrintState(node host.Host) {
+	for {
+		PrintNodeInfo(node)
+		time.Sleep(10 * time.Second)
 	}
 }
 
-func RunNode() host.Host {
+func RunNode(deps *dependencies.Dependencies) host.Host {
 	ctx := context.Background()
-	var idht *dht.IpfsDHT
-	var err error
-	var node host.Host
 	// Set your own keypair
 	defaultConfigPriv, _, err := crypto.GenerateKeyPair(
 		crypto.Ed25519, // Select your key type. Ed25519 are nice short
 		-1,             // Select key length when possible (i.e. RSA).
 	)
-	node, err = libp2p.New(ctx,
-		libp2p.ListenAddrStrings("/ip4/0.0.0.0/tcp/63785", "/ip4/0.0.0.0/tcp/63786/ws"),
+	addr := fmt.Sprintf("/ip4/%s/tcp/%s", deps.Config.Server.Host, deps.Config.Server.Port)
+	var defaultNode host.Host
+	defaultNode, err = libp2p.New(ctx,
+		libp2p.ListenAddrStrings(addr),
 		libp2p.Identity(defaultConfigPriv),
 		libp2p.Ping(true),
 	)
-	log.Printf("(WORKING) config hosts ID is %s\n", node.ID())
+	if err != nil {
+		panic(err)
+	}
+	log.Printf("(WORKING) host")
+	// go PrintState(deafaultNode)
+	log.Printf(" - NODE ID: %s", defaultNode.ID())
+	log.Printf(" - NODE ADDR: %v", defaultNode.Addrs())
+	event := services.NewNodeJoinedEvent(string(defaultNode.ID()))
+	msgId, err := services.EmitNodeJoinedEvent(deps.Config.Settings.QueueUrl, event)
 
+	if err != nil {
+		log.Errorln(err)
+		log.Printf("FAILED to emit node joined msg")
+	} else {
+		log.Printf("node joined msgId: %s", msgId)
+	}
+	return defaultNode
+}
+
+func runCusomNodeConfig() {
+	// TODO: understand libp2p config
+	ctx := context.Background()
+	var idht *dht.IpfsDHT
 	manualConfigPriv, _, err := crypto.GenerateKeyPair(
 		crypto.Ed25519, // Select your key type. Ed25519 are nice short
 		3,              // Select key length when possible (i.e. RSA).
 	)
-	node, err = libp2p.New(ctx,
+	node, err := libp2p.New(ctx,
 		// Use the keypair we generated
 		libp2p.Identity(manualConfigPriv),
 		// Multiple listen addresses
 		libp2p.ListenAddrStrings(
-			// "/ip4/0.0.0.0/tcp/9000",      // regular tcp connections
-			// "/ip4/0.0.0.0/udp/9000/quic", // a UDP endpoint for the QUIC transport
 			"/ip4/0.0.0.0/tcp/63785", "/ip4/0.0.0.0/tcp/63786/ws",
 		),
 		// support TLS connections
@@ -93,11 +112,6 @@ func RunNode() host.Host {
 		// performance issues.
 		libp2p.EnableNATService(),
 	)
-	if err != nil {
-		panic(err)
-	}
 	defer node.Close()
-	log.Printf("(WIP) Manual config host ID is %s\n", node.ID())
-
-	return node
+	// log.Printf("(WIP) Manual config host ID is %s\n", node.ID())
 }

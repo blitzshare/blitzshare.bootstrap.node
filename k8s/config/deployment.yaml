@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: bootstrap-ns
+  name: bootstrap-deployment
+  labels:
+    app: bootstrap-app
+spec:
+  selector:
+    matchLabels:
+      app: bootstrap-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bootstrap-app
+    spec:
+      containers:
+        - name: bootstrap-containers
+          image: iamkimchi/blitzshare.bootstrap.node:latest
+          imagePullPolicy: Always
+          env:
+            - name: ENV
+              value: prod
+            - name: PORT
+              value: "63785"
+            - name: QUEUE_URL
+              value: kubemq-cluster-grpc.kubemq.svc.cluster.local
+          ports:
+            - containerPort: 63785
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: "250m"
+            requests:
+              memory: 128Mi
+              cpu: "80m"
