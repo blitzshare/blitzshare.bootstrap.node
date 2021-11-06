@@ -3,6 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
 	"github.com/libp2p/go-libp2p"
 	connmgr "github.com/libp2p/go-libp2p-connmgr"
 	"github.com/libp2p/go-libp2p-core/crypto"
@@ -11,11 +17,6 @@ import (
 	dht "github.com/libp2p/go-libp2p-kad-dht"
 	noise "github.com/libp2p/go-libp2p-noise"
 	libp2ptls "github.com/libp2p/go-libp2p-tls"
-	"log"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
 )
 
 func main() {
@@ -57,8 +58,6 @@ func RunNode() host.Host {
 		libp2p.Identity(manualConfigPriv),
 		// Multiple listen addresses
 		libp2p.ListenAddrStrings(
-			// "/ip4/0.0.0.0/tcp/9000",      // regular tcp connections
-			// "/ip4/0.0.0.0/udp/9000/quic", // a UDP endpoint for the QUIC transport
 			"/ip4/0.0.0.0/tcp/63785", "/ip4/0.0.0.0/tcp/63786/ws",
 		),
 		// support TLS connections

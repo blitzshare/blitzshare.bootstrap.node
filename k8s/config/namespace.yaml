@@ -1,0 +1,6 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: bootstrap-ns
+  labels:
+    name: bootstrap-ns

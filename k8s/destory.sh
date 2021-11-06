@@ -1,0 +1,1 @@
+kubectl delete namespace file-share-ns

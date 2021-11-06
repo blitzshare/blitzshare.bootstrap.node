@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: bootstrap-ns
+  name: bootstrap-deployment
+  labels:
+    app: bootstrap
+spec:
+  selector:
+    matchLabels:
+      app: bootstrap
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bootstrap
+    spec:
+      containers:
+        - name: bootstrap
+          image: iamkimchi/blitzshare.bootstrap.node:local-latest
+          imagePullPolicy: Always
+          env:
+            - name: ENV
+              value: prod
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: "250m"
+            requests:
+              memory: 128Mi
+              cpu: "80m"
