@@ -3,12 +3,17 @@ module github.com/blitzshare/blitzshare.bootstrap.node
 go 1.17
 
 require (
+	github.com/joho/godotenv v1.4.0
+	github.com/kelseyhightower/envconfig v1.4.0
+	github.com/kubemq-io/kubemq-go v1.7.2
 	github.com/libp2p/go-libp2p v0.15.0
 	github.com/libp2p/go-libp2p-connmgr v0.2.4
 	github.com/libp2p/go-libp2p-core v0.9.0
 	github.com/libp2p/go-libp2p-kad-dht v0.15.0
 	github.com/libp2p/go-libp2p-noise v0.2.2
 	github.com/libp2p/go-libp2p-tls v0.2.0
+	github.com/sirupsen/logrus v1.8.1
+	github.com/stretchr/testify v1.7.0
 )
 
 require (
@@ -16,9 +21,12 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/btcsuite/btcd v0.22.0-beta // indirect
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/davidlazar/go-crypto v0.0.0-20200604182044-b73af7476f6c // indirect
 	github.com/flynn/noise v1.0.0 // indirect
+	github.com/go-resty/resty/v2 v2.0.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
+	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/gopacket v1.1.19 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -39,6 +47,7 @@ require (
 	github.com/jbenet/goprocess v0.1.4 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/koron/go-ssdp v0.0.2 // indirect
+	github.com/kubemq-io/protobuf v1.3.1 // indirect
 	github.com/libp2p/go-addr-util v0.1.0 // indirect
 	github.com/libp2p/go-buffer-pool v0.0.2 // indirect
 	github.com/libp2p/go-cidranger v1.1.0 // indirect
@@ -91,8 +100,10 @@ require (
 	github.com/multiformats/go-multihash v0.0.15 // indirect
 	github.com/multiformats/go-multistream v0.2.2 // indirect
 	github.com/multiformats/go-varint v0.0.6 // indirect
+	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/polydawn/refmt v0.0.0-20190807091052-3d65705ee9f1 // indirect
 	github.com/prometheus/client_golang v1.11.0 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
@@ -109,5 +120,9 @@ require (
 	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20210816183151-1e6c022a8912 // indirect
+	golang.org/x/text v0.3.7 // indirect
+	google.golang.org/genproto v0.0.0-20200825200019-8632dd797987 // indirect
+	google.golang.org/grpc v1.40.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )

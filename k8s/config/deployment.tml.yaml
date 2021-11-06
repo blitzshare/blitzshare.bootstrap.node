@@ -22,8 +22,12 @@ spec:
           env:
             - name: ENV
               value: ${ENV}
+            - name: PORT
+              value: "63785"
+            - name: QUEUE_URL
+              value: kubemq-cluster-grpc.kubemq.svc.cluster.local
           ports:
-            - containerPort: 80
+            - containerPort: 63785
           resources:
             limits:
               memory: 256Mi

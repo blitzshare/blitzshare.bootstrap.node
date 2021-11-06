@@ -16,14 +16,18 @@ spec:
         app: bootstrap-app
     spec:
       containers:
-        - name: bootstrap
-          image: iamkimchi/blitzshare.bootstrap.node:local-latest
+        - name: bootstrap-containers
+          image: iamkimchi/blitzshare.bootstrap.node:latest
           imagePullPolicy: Always
           env:
             - name: ENV
               value: prod
+            - name: PORT
+              value: "63785"
+            - name: QUEUE_URL
+              value: kubemq-cluster-grpc.kubemq.svc.cluster.local
           ports:
-            - containerPort: 80
+            - containerPort: 63785
           resources:
             limits:
               memory: 256Mi

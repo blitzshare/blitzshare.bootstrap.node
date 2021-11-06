@@ -3,7 +3,7 @@ WORKDIR /go/src
 ADD . /go/src
 RUN go install golang.org/x/tools/cmd/goimports@latest
 RUN go mod vendor
-RUN go build -o /go/src/entrypoint /go/src/app/main.go
+RUN go build -o /go/src/entrypoint /go/src/cmd/main.go
 
 FROM alpine
 WORKDIR /app
