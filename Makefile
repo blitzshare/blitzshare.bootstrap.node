@@ -6,8 +6,8 @@ test:
 	ENV=test && go test -v ./... -v -count=1
 
 fix-format:
-	gofmt -w -s app/ pkg/ cmd/ mocks/ testhelpers
-	goimports -w app/ pkg/ cmd/ mocks/ testhelpers
+	gofmt -w -s app/ cmd
+	goimports -w app/ cmd
 
 start:
 	go run ./cmd/main.go
@@ -36,5 +36,3 @@ k8s-apply:
 	kubectl apply -f k8s/config/service.yaml
 	kubectl set image deployment/bootstrap-deployment bootstrap-containers=iamkimchi/blitzshare.bootstrap.node:local-latest -n bootstrap-ns
 	kubectl wait -f k8s/config/deployment.yaml --for condition=available
-	
-# kubectl set image deployment/bootstrap-deployment bootstrap-containers=iamkimchi/blitzshare.bootstrap.node:local-latest
