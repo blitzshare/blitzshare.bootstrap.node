@@ -5,12 +5,11 @@ metadata:
     domain: blitzshare
   name: bootstrap-svc
   namespace: bootstrap-ns
-  
 spec:
   selector:
-    app: bootstrap-svc
+    app: bootstrap-app
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
+      targetPort: 63785
   type: LoadBalancer

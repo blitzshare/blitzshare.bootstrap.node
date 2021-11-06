@@ -4,16 +4,16 @@ metadata:
   namespace: bootstrap-ns
   name: bootstrap-deployment
   labels:
-    app: bootstrap
+    app: bootstrap-app
 spec:
   selector:
     matchLabels:
-      app: bootstrap
+      app: bootstrap-app
   replicas: 1
   template:
     metadata:
       labels:
-        app: bootstrap
+        app: bootstrap-app
     spec:
       containers:
         - name: bootstrap
