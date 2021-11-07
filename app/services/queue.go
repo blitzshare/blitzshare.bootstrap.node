@@ -46,7 +46,7 @@ func submitEvent(queueUrl string, event []byte, channelName string) (string, err
 }
 
 func EmitNodeJoinedEvent(queueUrl string, event *NodeJoinedEvent) (string, error) {
-	log.Debug("SubmitNodeJoinedEvent: %v", event)
+	log.Debugln("SubmitNodeJoinedEvent", event)
 	bEvent, err := json.Marshal(event)
 	if err != nil {
 		log.Fatal(err)
@@ -56,6 +56,6 @@ func EmitNodeJoinedEvent(queueUrl string, event *NodeJoinedEvent) (string, error
 	if err != nil {
 		return "", err
 	}
-	log.Debug("msgId: %s", msgId)
+	log.Debugln("msgId", msgId)
 	return msgId, nil
 }
