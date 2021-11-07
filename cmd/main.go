@@ -6,9 +6,9 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/blitzshare/blitzshare.bootstrap.node/app"
 	"github.com/blitzshare/blitzshare.bootstrap.node/app/config"
 	"github.com/blitzshare/blitzshare.bootstrap.node/app/dependencies"
-	"github.com/blitzshare/blitzshare.bootstrap.node/app/p2p"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -34,7 +34,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to load dependencies %v\n", err)
 	}
-	node := p2p.RunNode(deps)
+	node := app.Start(deps)
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
 	<-ch

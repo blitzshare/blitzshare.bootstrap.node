@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/blitzshare/blitzshare.bootstrap.node/app/dependencies"
-	"github.com/blitzshare/blitzshare.bootstrap.node/app/services"
 	"github.com/libp2p/go-libp2p"
 	connmgr "github.com/libp2p/go-libp2p-connmgr"
 	"github.com/libp2p/go-libp2p-core/crypto"
@@ -32,7 +31,7 @@ func PrintState(node host.Host) {
 	}
 }
 
-func RunNode(deps *dependencies.Dependencies) host.Host {
+func RunNode(deps *dependencies.Dependencies) (host.Host, error) {
 	ctx := context.Background()
 	// Set your own keypair
 	defaultConfigPriv, _, err := crypto.GenerateKeyPair(
@@ -46,23 +45,7 @@ func RunNode(deps *dependencies.Dependencies) host.Host {
 		libp2p.Identity(defaultConfigPriv),
 		libp2p.Ping(true),
 	)
-	if err != nil {
-		panic(err)
-	}
-	log.Printf("(WORKING) host")
-	// go PrintState(deafaultNode)
-	log.Printf(" - NODE ID: %s", defaultNode.ID())
-	log.Printf(" - NODE ADDR: %v", defaultNode.Addrs())
-	event := services.NewNodeJoinedEvent(string(defaultNode.ID()))
-	msgId, err := services.EmitNodeJoinedEvent(deps.Config.Settings.QueueUrl, event)
-
-	if err != nil {
-		log.Errorln(err)
-		log.Printf("FAILED to emit node joined msg")
-	} else {
-		log.Printf("node joined msgId: %s", msgId)
-	}
-	return defaultNode
+	return defaultNode, err
 }
 
 func runCusomNodeConfig() {
