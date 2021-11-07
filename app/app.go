@@ -27,5 +27,6 @@ func Start(deps *dep.Dependencies) host.Host {
 	} else {
 		log.Printf("node joined msgId: %s", msgId)
 	}
+	go p2p.PrintState(node)
 	return node
 }

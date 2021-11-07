@@ -18,6 +18,7 @@ import (
 )
 
 func PrintNodeInfo(node host.Host) {
+	log.Println()
 	log.Printf(" - NODE ID: %s", node.ID())
 	log.Printf(" - NODE ADDR: %v", node.Addrs())
 	peers := node.Network().Peers()
@@ -44,6 +45,13 @@ func RunNode(deps *dependencies.Dependencies) (host.Host, error) {
 		libp2p.ListenAddrStrings(addr),
 		libp2p.Identity(defaultConfigPriv),
 		libp2p.Ping(true),
+		// support TLS connections
+		libp2p.Security(libp2ptls.ID, libp2ptls.New),
+		libp2p.ConnectionManager(connmgr.NewConnManager(
+			100,         // Lowwater
+			400,         // HighWater,
+			time.Minute, // GracePeriod
+		)),
 	)
 	return defaultNode, err
 }
