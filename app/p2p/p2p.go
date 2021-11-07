@@ -13,6 +13,7 @@ import (
 	"github.com/libp2p/go-libp2p-core/routing"
 	dht "github.com/libp2p/go-libp2p-kad-dht"
 	noise "github.com/libp2p/go-libp2p-noise"
+	pubsub "github.com/libp2p/go-libp2p-pubsub"
 	libp2ptls "github.com/libp2p/go-libp2p-tls"
 	log "github.com/sirupsen/logrus"
 )
@@ -29,6 +30,36 @@ func PrintState(node host.Host) {
 		PrintNodeInfo(node)
 		time.Sleep(10 * time.Second)
 	}
+}
+
+const DiscoveryServiceTag = "pubsub-chat-example"
+
+type discoveryNotifee struct {
+	h host.Host
+}
+
+func RunPubSubNode(deps *dependencies.Dependencies) (host.Host, error) {
+	ctx := context.Background()
+	addr := fmt.Sprintf("/ip4/%s/tcp/%s", deps.Config.Server.Host, deps.Config.Server.Port)
+	defaultConfigPriv, _, _ := crypto.GenerateKeyPair(
+		crypto.Ed25519, // Select your key type. Ed25519 are nice short
+		-1,             // Select key length when possible (i.e. RSA).
+	)
+	host, _ := libp2p.New(ctx,
+		libp2p.ListenAddrStrings(addr),
+		libp2p.Identity(defaultConfigPriv),
+		libp2p.Ping(true),
+	)
+	// create a new PubSub service usingthe GossipSub rou ter
+	_, err := pubsub.NewGossipSub(ctx, host)
+	if err != nil {
+		panic(err)
+	}
+	// setup local mDNS discovery
+	// if err := setupDiscovery(host); err != nil {
+	// 	panic(err)
+	// }
+	return host, err
 }
 
 func RunNode(deps *dependencies.Dependencies) (host.Host, error) {

@@ -10,15 +10,16 @@ import (
 )
 
 func Start(deps *dep.Dependencies) host.Host {
-	node, err := p2p.RunNode(deps)
+	// host, err := p2p.RunPubSubNode(deps)
+	host, err := p2p.RunNode(deps)
 	if err != nil {
 		panic(err)
 	}
 	log.Printf("(WORKING) host")
 	// go PrintState(deafaultNode)
-	log.Printf(" - NODE ID: %s", node.ID())
-	log.Printf(" - NODE ADDR: %v", node.Addrs())
-	event := services.NewNodeJoinedEvent(string(node.ID()))
+	log.Printf(" - NODE ID: %s", host.ID())
+	log.Printf(" - NODE ADDR: %v", host.Addrs())
+	event := services.NewNodeJoinedEvent(string(host.ID()))
 	msgId, err := services.EmitNodeJoinedEvent(deps.Config.Settings.QueueUrl, event)
 
 	if err != nil {
@@ -27,5 +28,6 @@ func Start(deps *dep.Dependencies) host.Host {
 	} else {
 		log.Printf("node joined msgId: %s", msgId)
 	}
-	return node
+	go p2p.PrintState(host)
+	return host
 }
