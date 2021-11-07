@@ -27,7 +27,7 @@ func submitEvent(queueUrl string, event []byte, channelName string) (string, err
 		kubemq.WithTransportType(kubemq.TransportTypeGRPC))
 
 	if err != nil {
-		log.Errorln("something is wrong", err)
+		log.Errorln("cant connect to queue", queueUrl, err)
 		return "", err
 	}
 	defer client.Close()
