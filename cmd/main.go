@@ -25,6 +25,7 @@ func initLog() {
 }
 
 func main() {
+	log.Printf("running main")
 	cfg, err := config.Load()
 	initLog()
 	if err != nil {

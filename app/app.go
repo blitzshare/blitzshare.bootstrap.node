@@ -10,8 +10,11 @@ import (
 )
 
 func Start(deps *dep.Dependencies) host.Host {
+	log.Printf("staring node")
 	node, err := p2p.RunNode(deps)
+
 	if err != nil {
+		log.Errorln("Shwopsy")
 		panic(err)
 	}
 	log.Printf("(WORKING) host")

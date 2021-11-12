@@ -9,4 +9,4 @@ FROM alpine
 WORKDIR /app
 COPY --from=builder /go/src/entrypoint /app/
 EXPOSE 63785
-ENTRYPOINT [ "/app/entrypoint"]
+ENTRYPOINT ["/app/entrypoint"]

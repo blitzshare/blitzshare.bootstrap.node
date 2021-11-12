@@ -30,5 +30,5 @@ k8s-apply:
 	kubectl apply -f k8s/config/namespace.yaml 
 	kubectl apply -f k8s/config/deployment.yaml
 	kubectl apply -f k8s/config/service.yaml
-	kubectl set image deployment/bootstrap-deployment bootstrap-containers=iamkimchi/blitzshare.bootstrap.node:latest -n bootstrap-ns
+	# kubectl set image deployment/bootstrap-deployment bootstrap-containers=iamkimchi/blitzshare.bootstrap.node:latest -n bootstrap-ns
 	kubectl wait -f k8s/config/deployment.yaml --for condition=available
