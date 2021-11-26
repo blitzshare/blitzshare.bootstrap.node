@@ -17,7 +17,7 @@ func NewNodeJoinedEvent(nodeId string) *NodeJoinedEvent {
 }
 
 const clientId = "bootstrap-node"
-const channelName = "node-instances-channel"
+const channelName = "p2p-node-instance-channel"
 
 func submitEvent(queueUrl string, event []byte, channelName string) (string, error) {
 	ctx, _ := context.WithCancel(context.Background())
