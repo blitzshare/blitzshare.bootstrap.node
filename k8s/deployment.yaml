@@ -16,7 +16,7 @@ spec:
         app: blitzshare-bootstrap-app
     spec:
       containers:
-        - name: blitzshare-bootstrap-containers
+        - name: blitzshare-bootstrap-node
           image: iamkimchi/blitzshare.bootstrap.node:latest
           imagePullPolicy: Always
           env:

@@ -8,22 +8,26 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type NodeJoinedEvent struct {
+type NodeRegistryCmd struct {
 	NodeId string `json:"nodeId"`
+	Port   int    `json:"port"`
 }
 
-func NewNodeJoinedEvent(nodeId string) *NodeJoinedEvent {
-	return &NodeJoinedEvent{NodeId: nodeId}
+func NewNodeRegistryCmd(nodeId string, port int) *NodeRegistryCmd {
+	return &NodeRegistryCmd{NodeId: nodeId, Port: port}
 }
 
-const clientId = "bootstrap-node"
-const channelName = "p2p-node-instance-channel"
+const (
+	ClientId                         = "bootstrap-node"
+	P2pBootstrapNodeRegistryCmdTopic = "p2p-bootstrap-node-registry-cmd"
+)
 
-func submitEvent(queueUrl string, event []byte, channelName string) (string, error) {
+func emitEvent(queueUrl string, event []byte, topic string) (string, error) {
+	log.Infoln("SubmitNodeJoinedEvent, topic:", topic)
 	ctx, _ := context.WithCancel(context.Background())
 	client, err := kubemq.NewClient(ctx,
 		kubemq.WithAddress(queueUrl, 50000),
-		kubemq.WithClientId(clientId),
+		kubemq.WithClientId(ClientId),
 		kubemq.WithTransportType(kubemq.TransportTypeGRPC))
 
 	if err != nil {
@@ -33,26 +37,25 @@ func submitEvent(queueUrl string, event []byte, channelName string) (string, err
 	defer client.Close()
 
 	sendResult, err := client.NewQueueMessage().
-		SetChannel(channelName).
+		SetChannel(topic).
 		SetBody(event).
 		Send(ctx)
 
 	if err != nil {
 		return "", err
 	}
-	log.Debugln("clientId", clientId)
-	log.Debugln("uploadMsgEventChannelName", channelName)
+	log.Infoln("clientId", ClientId)
+	log.Infoln("uploadMsgEventChannelName", topic)
 	return sendResult.MessageID, nil
 }
 
-func EmitNodeJoinedEvent(queueUrl string, event *NodeJoinedEvent) (string, error) {
-	log.Debugln("SubmitNodeJoinedEvent", event)
+func EmitNodeRegistryCmd(queueUrl string, event *NodeRegistryCmd) (string, error) {
 	bEvent, err := json.Marshal(event)
 	if err != nil {
 		log.Fatal(err)
 		return "", err
 	}
-	msgId, err := submitEvent(queueUrl, bEvent, channelName)
+	msgId, err := emitEvent(queueUrl, bEvent, P2pBootstrapNodeRegistryCmdTopic)
 	if err != nil {
 		return "", err
 	}

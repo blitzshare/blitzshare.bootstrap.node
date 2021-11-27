@@ -1,6 +1,8 @@
 package app
 
 import (
+	"strconv"
+
 	"github.com/libp2p/go-libp2p-core/host"
 	log "github.com/sirupsen/logrus"
 
@@ -21,12 +23,12 @@ func Start(deps *dep.Dependencies) host.Host {
 	// go PrintState(deafaultNode)
 	log.Printf(" - NODE ID: %s", node.ID())
 	log.Printf(" - NODE ADDR: %v", node.Addrs())
-	event := services.NewNodeJoinedEvent(string(node.ID()))
-	msgId, err := services.EmitNodeJoinedEvent(deps.Config.Settings.QueueUrl, event)
-
+	port, _ := strconv.Atoi(deps.Config.Server.Port)
+	event := services.NewNodeRegistryCmd(string(node.ID()), port)
+	msgId, err := services.EmitNodeRegistryCmd(deps.Config.Settings.QueueUrl, event)
 	if err != nil {
 		log.Errorln(err)
-		log.Printf("FAILED to emit node joined msg")
+		log.Printf("FAILED to emit event")
 	} else {
 		log.Printf("node joined msgId: %s", msgId)
 	}
