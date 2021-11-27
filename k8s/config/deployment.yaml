@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: bootstrap-ns
-  name: bootstrap-deployment
+  namespace: blitzshare-bootstrap-ns
+  name: blitzshare-bootstrap-deployment
   labels:
-    app: bootstrap-app
+    app: blitzshare-bootstrap-app
 spec:
   selector:
     matchLabels:
-      app: bootstrap-app
+      app: blitzshare-bootstrap-app
   replicas: 1
   template:
     metadata:
       labels:
-        app: bootstrap-app
+        app: blitzshare-bootstrap-app
     spec:
       containers:
-        - name: bootstrap-containers
+        - name: blitzshare-bootstrap-containers
           image: iamkimchi/blitzshare.bootstrap.node:latest
           imagePullPolicy: Always
           env:

@@ -3,11 +3,11 @@ kind: Service
 metadata:
   labels:
     domain: blitzshare
-  name: bootstrap-svc
-  namespace: bootstrap-ns
+  name: blitzshare-bootstrap-svc
+  namespace: blitzshare-bootstrap-ns
 spec:
   selector:
-    app: bootstrap-app
+    app: blitzshare-bootstrap-app
   ports:
     - protocol: TCP
       port: 63785

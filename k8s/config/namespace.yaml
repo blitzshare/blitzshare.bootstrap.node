@@ -1,6 +1,6 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: bootstrap-ns
+  name: blitzshare-bootstrap-ns
   labels:
-    name: bootstrap-ns
+    name: blitzshare-bootstrap-ns

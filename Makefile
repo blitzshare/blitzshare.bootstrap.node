@@ -22,7 +22,7 @@ dockerhub-build:
 	
 
 k8s-destory:
-	kubectl delete namespace bootstrap-ns
+	kubectl delete namespace blitzshare-bootstrap-ns
 
 k8s-pf:
 	kubectl port-forward $(kubectl get pods  | tail -n1 | awk '{print $1}') 8000:80
@@ -31,5 +31,5 @@ k8s-apply:
 	kubectl apply -f k8s/config/namespace.yaml 
 	kubectl apply -f k8s/config/deployment.yaml
 	kubectl apply -f k8s/config/service.yaml
-	kubectl rollout restart deployment/bootstrap-deployment --namespace bootstrap-ns
+	kubectl rollout restart deployment/blitzshare-bootstrap-deployment --namespace blitzshare-bootstrap-ns
 	kubectl wait -f k8s/config/deployment.yaml --for condition=available
