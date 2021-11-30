@@ -15,12 +15,14 @@ start:
 build:
 	go build -o entrypoint app/main.go
 
-dockerhub-build:
+docker-build:
 	docker buildx build --platform linux/amd64 -t blitzshare.bootstrap.node:latest .
 	docker tag blitzshare.bootstrap.node:latest iamkimchi/blitzshare.bootstrap.node:latest
+
+dockerhub-build:
+	make deocker-build
 	docker push iamkimchi/blitzshare.bootstrap.node:latest
 	
-
 k8s-destory:
 	kubectl delete namespace blitzshare-bootstrap-ns
 
