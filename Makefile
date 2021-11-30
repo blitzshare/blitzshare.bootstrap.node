@@ -17,10 +17,11 @@ build:
 
 docker-build:
 	docker buildx build --platform linux/amd64 -t blitzshare.bootstrap.node:latest .
+	minikube image load blitzshare.bootstrap.node:latest
 	docker tag blitzshare.bootstrap.node:latest iamkimchi/blitzshare.bootstrap.node:latest
 
 dockerhub-build:
-	make deocker-build
+	make docker-build
 	docker push iamkimchi/blitzshare.bootstrap.node:latest
 	
 k8s-destory:
