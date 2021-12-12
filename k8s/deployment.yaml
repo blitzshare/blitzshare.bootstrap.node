@@ -17,8 +17,7 @@ spec:
     spec:
       containers:
         - name: blitzshare-bootstrap-node
-          image: blitzshare.bootstrap.node:latest
-          imagePullPolicy: Never # used for local kubernetes deployment
+          image: iamkimchi/blitzshare.bootstrap.node:latest
           env:
             - name: ENV
               value: prod
