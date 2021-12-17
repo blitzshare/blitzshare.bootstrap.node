@@ -4,7 +4,7 @@ metadata:
   labels:
     domain: blitzshare
   name: blitzshare-bootstrap-svc
-  namespace: blitzshare-bootstrap-ns
+  namespace: blitzshare-ns
 spec:
   selector:
     app: blitzshare-bootstrap-app

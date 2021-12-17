@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: blitzshare-bootstrap-ns
+  namespace: blitzshare-ns
   name: blitzshare-bootstrap-deployment
   labels:
     app: blitzshare-bootstrap-app
