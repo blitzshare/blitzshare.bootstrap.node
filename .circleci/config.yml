@@ -45,7 +45,7 @@ jobs:
     docker:
       - image: circleci/golang:1.17.2
     environment:
-      LOCAL_DOCKER_IMAGE: blitzshare.bootstrap.node
+      PROJ_NAME: blitzshare.bootstrap.node
     steps:
       - checkout
       - kubernetes/install-kubectl
@@ -56,16 +56,11 @@ jobs:
       - run:
           name: docker build, tag & push
           command: |
+            TAG=latest
             docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWORD}
-            docker build -t ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} .
-            docker tag ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} iamkimchi/blitzshare.fileshare.api:ci-build-${CIRCLE_BUILD_NUM}
-            docker push iamkimchi/blitzshare.fileshare.api:ci-build-${CIRCLE_BUILD_NUM}
-            docker tag ${LOCAL_DOCKER_IMAGE}:${CIRCLE_BUILD_NUM} iamkimchi/blitzshare.fileshare.api:latest
-            docker push iamkimchi/blitzshare.fileshare.api:latest
-      - <<: *gen_k8s_templates
-      - run:
-          name: Copnfigure cluster context
-          command: aws eks --region eu-west-1 update-kubeconfig --name blitzshare-cluster 
+            docker build -t  ${PROJ_NAME}:${TAG} .
+            docker tag ${PROJ_NAME}:${TAG} iamkimchi/${PROJ_NAME}:${TAG}
+            docker push iamkimchi/${PROJ_NAME}:${TAG}
 
   deploy_job:
     working_directory: ~/repo
@@ -102,11 +97,11 @@ workflows:
             branches:
               only:
                 - main
-      - deploy_job:
-          context: eu-west-1
-          requires:
-            - build_job
-          filters:
-            branches:
-              only:
-                - main
+      # - deploy_job:
+      #     context: eu-west-1
+      #     requires:
+      #       - build_job
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
