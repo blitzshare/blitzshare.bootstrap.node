@@ -23,6 +23,7 @@ func Start(deps *dep.Dependencies) host.Host {
 	// go PrintState(deafaultNode)
 	log.Printf(" - NODE ID: %s", node.ID())
 	log.Printf(" - NODE ADDR: %v", node.Addrs())
+	log.Println(" - string(ID)", string(node.ID()))
 	port, _ := strconv.Atoi(deps.Config.Server.Port)
 	event := services.NewNodeRegistryCmd(string(node.ID()), port)
 	msgId, err := services.EmitNodeRegistryCmd(deps.Config.Settings.QueueUrl, event)
