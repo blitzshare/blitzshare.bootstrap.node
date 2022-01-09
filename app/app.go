@@ -23,7 +23,6 @@ func Start(deps *dep.Dependencies) host.Host {
 	// go PrintState(deafaultNode)
 	log.Printf(" - NODE ID: %s", node.ID())
 	log.Printf(" - NODE ADDR: %v", node.Addrs())
-	log.Println(" - Pretty(ID)", node.ID().Pretty())
 	port, _ := strconv.Atoi(deps.Config.Server.Port)
 	event := services.NewNodeRegistryCmd(node.ID().Pretty(), port)
 	msgId, err := services.EmitNodeRegistryCmd(deps.Config.Settings.QueueUrl, event)
@@ -31,7 +30,7 @@ func Start(deps *dep.Dependencies) host.Host {
 		log.Errorln(err)
 		log.Printf("FAILED to emit event")
 	} else {
-		log.Printf("node joined msgId: %s", msgId)
+		log.Printf("Node joined msgId: %s", msgId)
 	}
 	return node
 }
