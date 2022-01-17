@@ -19,10 +19,10 @@ spec:
         - name: blitzshare-bootstrap-node
           image: iamkimchi/blitzshare.bootstrap.node:latest
           env:
-            - name: ENV
-              value: prod
             - name: PORT
               value: "63785"
+            - name: HOST
+              value: "0.0.0.0"
             - name: QUEUE_URL
               value: kubemq-cluster-grpc.kubemq.svc.cluster.local
           ports:

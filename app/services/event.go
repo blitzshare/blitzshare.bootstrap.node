@@ -23,7 +23,7 @@ const (
 )
 
 func emitEvent(queueUrl string, event []byte, topic string) (string, error) {
-	log.Infoln("SubmitNodeJoinedEvent, topic:", topic)
+	log.Debugln("SubmitNodeJoinedEvent, topic:", topic)
 	ctx, _ := context.WithCancel(context.Background())
 	client, err := kubemq.NewClient(ctx,
 		kubemq.WithAddress(queueUrl, 50000),
@@ -52,13 +52,11 @@ func emitEvent(queueUrl string, event []byte, topic string) (string, error) {
 func EmitNodeRegistryCmd(queueUrl string, event *NodeRegistryCmd) (string, error) {
 	bEvent, err := json.Marshal(event)
 	if err != nil {
-		log.Fatal(err)
-		return "", err
+		log.Fatalln(err)
 	}
 	msgId, err := emitEvent(queueUrl, bEvent, P2pBootstrapNodeRegistryCmdTopic)
 	if err != nil {
-		return "", err
+		log.Fatalln(err)
 	}
-	log.Debugln("msgId", msgId)
 	return msgId, nil
 }

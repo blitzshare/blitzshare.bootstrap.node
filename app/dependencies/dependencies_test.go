@@ -23,10 +23,8 @@ func TestDependencies(t *testing.T) {
 
 func setUp() {
 	_ = os.Setenv("PORT", "38643")
-	_ = os.Setenv("ENV", "local")
 }
 
 func tearDown() {
 	_ = os.Unsetenv("PORT")
-	_ = os.Unsetenv("ENV")
 }

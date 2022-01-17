@@ -12,14 +12,10 @@ import (
 )
 
 func Start(deps *dep.Dependencies) host.Host {
-	log.Printf("staring node")
 	node, err := p2p.RunNode(deps)
-
 	if err != nil {
-		log.Errorln("Shwopsy")
-		panic(err)
+		log.Fatalln(err)
 	}
-	log.Printf("(WORKING) host")
 	// go PrintState(deafaultNode)
 	log.Printf(" - NODE ID: %s", node.ID())
 	log.Printf(" - NODE ADDR: %v", node.Addrs())
@@ -28,7 +24,6 @@ func Start(deps *dep.Dependencies) host.Host {
 	msgId, err := services.EmitNodeRegistryCmd(deps.Config.Settings.QueueUrl, event)
 	if err != nil {
 		log.Errorln(err)
-		log.Printf("FAILED to emit event")
 	} else {
 		log.Printf("Node joined msgId: %s", msgId)
 	}

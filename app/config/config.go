@@ -13,8 +13,7 @@ type Server struct {
 }
 
 type Settings struct {
-	Environment string `envconfig:"ENV" default:"local"`
-	QueueUrl    string `envconfig:"QUEUE_URL"`
+	QueueUrl string `envconfig:"QUEUE_URL"`
 }
 
 func Load() (Config, error) {
