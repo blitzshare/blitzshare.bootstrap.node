@@ -19,5 +19,5 @@ k8s-apply:
 	kubectl apply -f k8s/namespace.yaml 
 	kubectl apply -f k8s/deployment.yaml
 	kubectl apply -f k8s/service.yaml
-	kubectl rollout restart deployment/blitzshare-bootstrap-deployment --namespace blitzshare-ns
+	kubectl rollout restart deployment/blitzshare-bootstrap-dpl --namespace blitzshare-ns
 	kubectl wait -f k8s/deployment.yaml --for condition=available
