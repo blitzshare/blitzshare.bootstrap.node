@@ -71,7 +71,11 @@ jobs:
 workflows:
   test-wf:
     jobs:
-      - test_job
+      - test_job:
+          filters:
+            branches:
+              ignore:
+                - main
   deploy-wf:
     jobs:
       - test_job:
