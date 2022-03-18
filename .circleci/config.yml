@@ -3,17 +3,6 @@ orbs:
   kubernetes: circleci/kubernetes@0.12.0
   aws-cli: circleci/aws-cli@2.0.3
 
-gen_k8s_remplates: &gen_k8s_templates
-  - run:
-      name: generate k8s templates
-      command: |
-        sudo apt install gettext-base
-        export DOCKER_IMAGE_URL=iamkimchi/blitzshare.bootstrap.node:latest
-        export PORT=8000
-        export ENV=prod
-        envsubst  < ./k8s/config/deployment.tml.yaml > ./k8s/config/deployment.yaml
-        cat ./k8s/config/deployment.yaml
-
 jobs:
   test_job:
     working_directory: ~/repo
@@ -46,6 +35,7 @@ jobs:
       - image: circleci/golang:1.17.2
     environment:
       PROJ_NAME: blitzshare.bootstrap.node
+      TAG: latest
     steps:
       - checkout
       - kubernetes/install-kubectl
@@ -56,7 +46,6 @@ jobs:
       - run:
           name: docker build, tag & push
           command: |
-            TAG=latest
             docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWORD}
             docker build -t  ${PROJ_NAME}:${TAG} .
             docker tag ${PROJ_NAME}:${TAG} iamkimchi/${PROJ_NAME}:${TAG}
@@ -70,25 +59,26 @@ jobs:
       - checkout
       - kubernetes/install-kubectl
       - aws-cli/setup
-      - <<: *gen_k8s_templates
       - run:
-          name: Copnfigure cluster context
-          command: aws eks --region eu-west-1 update-kubeconfig --name blitzshare-cluster 
+          name: configure cluster context
+          command: aws eks --region eu-west-2 update-kubeconfig --name eu-west-2-blitzshare-cluster
       - run:
           name: k8s deploy
           command: |
             make k8s-apply
+            kubectl rollout status deployment/blitzshare-bootstrap-dpl -n blitzshare-ns --timeout=120s
 
 workflows:
-  test-deploy-wf:
+  test-wf:
+    jobs:
+      - test_job
+  deploy-wf:
     jobs:
       - test_job:
-          context: eu-west-1
-          # filters:
-          #   branches:
-          #     ignore:
-          #       - main
-
+          filters:
+            branches:
+              only:
+                - main
       - build_job:
           context: eu-west-1
           requires:
@@ -97,11 +87,7 @@ workflows:
             branches:
               only:
                 - main
-      # - deploy_job:
-      #     context: eu-west-1
-      #     requires:
-      #       - build_job
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
+      - deploy_job:
+          context: eu-west-1
+          requires:
+            - build_job
